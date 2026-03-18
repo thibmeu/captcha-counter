@@ -15,12 +15,21 @@ function relay(captchaType: "turnstile" | "recaptcha", outcome: "success" | "fai
 
 const prevTokens = new Map<string, string>();
 
+// Pure transition logic — exported for testing.
+// Returns the outcome when a token changes, or null if no event should fire.
+export function tokenOutcome(prev: string, next: string): "success" | "failure" | null {
+  if (next === prev) return null;
+  if (next && !prev) return "success";
+  if (!next && prev) return "failure";
+  return null;
+}
+
 function checkToken(key: string, token: string, captchaType: "turnstile" | "recaptcha"): void {
   const prev = prevTokens.get(key) ?? "";
-  if (token === prev) return;
+  const outcome = tokenOutcome(prev, token);
+  if (outcome === null) return;
   prevTokens.set(key, token);
-  if (token && !prev) relay(captchaType, "success");
-  else if (!token && prev) relay(captchaType, "failure");
+  relay(captchaType, outcome);
 }
 
 // ── Turnstile ──────────────────────────────────────────────────────────────────

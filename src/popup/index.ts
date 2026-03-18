@@ -1,4 +1,6 @@
 import type { CaptchaEvent, CaptchaType, EventType } from "../types";
+import { computeStats } from "./stats";
+import type { Counts } from "./stats";
 
 const PROVIDERS: { type: CaptchaType; label: string }[] = [
   { type: "turnstile", label: "Cloudflare Turnstile" },
@@ -10,20 +12,6 @@ const METRICS: { event: EventType; label: string; cls: string }[] = [
   { event: "success", label: "Solved",  cls: "success" },
   { event: "failure", label: "Failed",  cls: "failure" },
 ];
-
-type Counts = Record<EventType, number>;
-type Stats  = Record<CaptchaType, Counts>;
-
-function computeStats(events: CaptchaEvent[]): Stats {
-  const stats: Stats = {
-    turnstile: { clicked: 0, success: 0, failure: 0 },
-    recaptcha:  { clicked: 0, success: 0, failure: 0 },
-  };
-  for (const e of events) {
-    stats[e.captcha_type][e.event_type]++;
-  }
-  return stats;
-}
 
 function renderSection(label: string, counts: Counts): HTMLElement {
   const total = counts.success + counts.failure;
