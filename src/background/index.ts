@@ -2,12 +2,12 @@ import { appendEvent } from "../storage";
 import type { BackgroundMessage, EventType } from "../types";
 
 function iconPaths(state: "idle" | "success" | "failure"): Record<string, string> {
-  return {
-    "16":  `icons/${state}-16.png`,
-    "32":  `icons/${state}-32.png`,
-    "48":  `icons/${state}-48.png`,
-    "128": `icons/${state}-128.png`,
-  };
+  return Object.fromEntries(
+    [16, 32, 48, 128].map((size) => [
+      String(size),
+      chrome.runtime.getURL(`icons/${state}-${size}.png`),
+    ])
+  );
 }
 
 function iconState(eventType: EventType): "idle" | "success" | "failure" {
