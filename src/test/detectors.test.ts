@@ -6,6 +6,7 @@ vi.mock("../content/index", () => ({ sendEvent: vi.fn() }));
 
 import { TurnstileDetector } from "../content/detectors/turnstile";
 import { RecaptchaDetector } from "../content/detectors/recaptcha";
+import { HcaptchaDetector } from "../content/detectors/hcaptcha";
 
 describe("TurnstileDetector.matchesIframe", () => {
   const d = new TurnstileDetector();
@@ -44,6 +45,30 @@ describe("RecaptchaDetector.matchesIframe", () => {
 
   it("does not match Turnstile URLs", () => {
     expect(d.matchesIframe("https://challenges.cloudflare.com/cdn-cgi/challenge-platform/turnstile")).toBe(false);
+  });
+
+  it("does not match an empty string", () => {
+    expect(d.matchesIframe("")).toBe(false);
+  });
+});
+
+describe("HcaptchaDetector.matchesIframe", () => {
+  const d = new HcaptchaDetector();
+
+  it("matches newassets.hcaptcha.com frames", () => {
+    expect(d.matchesIframe("https://newassets.hcaptcha.com/captcha/v1/abc/static/hcaptcha.html")).toBe(true);
+  });
+
+  it("matches assets.hcaptcha.com frames", () => {
+    expect(d.matchesIframe("https://assets.hcaptcha.com/captcha/v1/abc/static/hcaptcha.html")).toBe(true);
+  });
+
+  it("does not match other hcaptcha subdomains", () => {
+    expect(d.matchesIframe("https://hcaptcha.com/verify")).toBe(false);
+  });
+
+  it("does not match reCAPTCHA URLs", () => {
+    expect(d.matchesIframe("https://www.google.com/recaptcha/api2/anchor")).toBe(false);
   });
 
   it("does not match an empty string", () => {

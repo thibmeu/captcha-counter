@@ -9,7 +9,7 @@
 
 const MSG_SOURCE = "__captcha_counter";
 
-function relay(captchaType: "turnstile" | "recaptcha", outcome: "success" | "failure"): void {
+function relay(captchaType: "turnstile" | "recaptcha" | "hcaptcha", outcome: "success" | "failure"): void {
   window.postMessage({ [MSG_SOURCE]: true, captchaType, outcome }, "*");
 }
 
@@ -24,7 +24,7 @@ export function tokenOutcome(prev: string, next: string): "success" | "failure" 
   return null;
 }
 
-function checkToken(key: string, token: string, captchaType: "turnstile" | "recaptcha"): void {
+function checkToken(key: string, token: string, captchaType: "turnstile" | "recaptcha" | "hcaptcha"): void {
   const prev = prevTokens.get(key) ?? "";
   const outcome = tokenOutcome(prev, token);
   if (outcome === null) return;
@@ -63,4 +63,18 @@ setInterval(() => {
       break; // getResponse throws for IDs beyond the last rendered widget
     }
   }
+}, 300);
+
+// ── hCaptcha ────────────────────────────────────────────────────────────────
+// hCaptcha doesn't expose sequential integer IDs; getResponse() with no
+// argument returns the token for the first (or only) widget.
+
+setInterval(() => {
+  const hc = (window as unknown as Record<string, unknown>).hcaptcha as
+    | { getResponse(): string | undefined }
+    | undefined;
+  if (!hc?.getResponse) return;
+  try {
+    checkToken("hc", hc.getResponse() ?? "", "hcaptcha");
+  } catch { /* widget not yet ready */ }
 }, 300);

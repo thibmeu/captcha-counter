@@ -1,5 +1,6 @@
 import { RecaptchaDetector } from "./detectors/recaptcha";
 import { TurnstileDetector } from "./detectors/turnstile";
+import { HcaptchaDetector } from "./detectors/hcaptcha";
 import type { BackgroundMessage, CaptchaType, EventType } from "../types";
 
 // Receive success/failure events from main-world.ts and forward to the background.
@@ -13,7 +14,7 @@ window.addEventListener("message", (event) => {
   sendEvent(data.captchaType as CaptchaType, data.outcome as EventType);
 });
 
-const detectors = [new TurnstileDetector(), new RecaptchaDetector()];
+const detectors = [new TurnstileDetector(), new RecaptchaDetector(), new HcaptchaDetector()];
 
 function init(): void {
   for (const detector of detectors) {

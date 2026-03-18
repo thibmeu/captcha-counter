@@ -1,4 +1,4 @@
-export type CaptchaType = "turnstile" | "recaptcha";
+export type CaptchaType = "turnstile" | "recaptcha" | "hcaptcha";
 
 export type EventType = "clicked" | "success" | "failure";
 

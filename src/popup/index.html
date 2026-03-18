@@ -10,11 +10,30 @@
     <header>
       <span class="header-icon">😶</span>
       <h1>Captcha Counter</h1>
+      <select id="range">
+        <option value="all">All time</option>
+        <option value="today">Today</option>
+        <option value="7d">Last 7 days</option>
+        <option value="30d">Last 30 days</option>
+      </select>
     </header>
     <div id="stats"></div>
+    <div id="by-site-accordion" hidden>
+      <button id="by-site-trigger" aria-expanded="false">
+        <span>By site</span>
+        <span class="accordion-chevron">▾</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-inner">
+          <ul id="sites-list"></ul>
+        </div>
+      </div>
+    </div>
     <footer>
       <button id="open-options">Export &amp; manage data ↗</button>
+      <button id="reset">Reset data</button>
     </footer>
+    <p class="privacy-note">All data stays on your device.</p>
     <script type="module" src="./index.ts"></script>
   </body>
 </html>
