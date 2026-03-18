@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Captcha Counter — Settings</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <span class="header-icon">🛡</span>
+        <h1>Captcha Counter</h1>
+      </header>
+
+      <section>
+        <h2>Data</h2>
+        <p id="summary" class="summary">Loading…</p>
+        <button id="export" class="btn btn-primary" disabled>Export as CSV</button>
+      </section>
+
+      <section class="danger-zone">
+        <h2>Danger zone</h2>
+        <p class="hint">Clearing data is permanent and cannot be undone.</p>
+        <button id="clear" class="btn btn-danger" disabled>Clear all data</button>
+      </section>
+    </main>
+    <script type="module" src="./index.ts"></script>
+  </body>
+</html>

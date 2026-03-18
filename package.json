@@ -1,0 +1,19 @@
+{
+  "name": "captcha-counter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:chrome": "vite build --mode chrome",
+    "build:firefox": "vite build --mode firefox",
+    "dev:chrome": "vite build --watch --mode chrome",
+    "dev:firefox": "vite build --watch --mode firefox",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.310",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vite-plugin-web-extension": "^4.0.0"
+  }
+}

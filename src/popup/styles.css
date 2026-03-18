@@ -1,0 +1,188 @@
+/*
+ * Design tokens — OKLCH color space (perceptually uniform, unlike HSL).
+ * Neutrals carry a subtle blue-gray tint (chroma 0.008–0.015) for cohesion.
+ * All text/background pairs have been verified at ≥ 4.5:1 (WCAG AA).
+ * Spacing follows a 4pt base: 4, 8, 12, 16, 20, 24, 32px.
+ */
+
+:root {
+  /* Text */
+  --text:         oklch(22%  0.020 250);   /* ~#1a2332 — dark blue-gray     */
+  --text-sub:     oklch(44%  0.012 250);   /* ~#5a6a7a — ≥ 4.5:1 on --bg   */
+  --text-success: oklch(42%  0.130 165);   /* teal-green                    */
+  --text-failure: oklch(44%  0.160  27);   /* red                           */
+
+  /* Surfaces */
+  --bg:           oklch(100% 0     0);
+  --header-bg:    oklch( 98% 0.006 250);   /* barely-tinted off-white       */
+  --divider:      oklch( 91% 0.007 250);   /* tinted separator              */
+  --bar-bg:       oklch( 93% 0.006 250);   /* tinted progress track         */
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+
+body {
+  /* System font stack: instant load, native feel, avoids the Inter cliché */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+  width: 300px;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--divider);
+}
+
+.header-icon {
+  font-size: 14px;
+  line-height: 1;
+  /* Optical adjustment — emoji glyphs read visually high */
+  position: relative;
+  top: 1px;
+}
+
+header h1 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+/* ── Provider sections ───────────────────────────────────────────────────── */
+
+section {
+  padding: 16px 20px;
+}
+
+section + section {
+  border-top: 1px solid var(--divider);
+}
+
+.provider-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+}
+
+/* ── Metric grid ─────────────────────────────────────────────────────────── */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 12px;
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.metric-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-sub);
+}
+
+.metric.success .metric-value { color: var(--text-success); }
+.metric.failure .metric-value { color: var(--text-failure); }
+
+/* ── Success-rate bar ────────────────────────────────────────────────────── */
+
+.rate-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rate-track {
+  flex: 1;
+  height: 3px;
+  background: var(--bar-bg);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.rate-fill {
+  height: 100%;
+  background: var(--text-success);
+  border-radius: 99px;
+}
+
+.rate-pct {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+  min-width: 28px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+footer {
+  border-top: 1px solid var(--divider);
+  padding: 10px 20px;
+}
+
+footer button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--text-sub);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+}
+
+footer button:hover {
+  color: var(--text);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.empty {
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.empty-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.empty-body {
+  font-size: 12px;
+  color: var(--text-sub);
+  line-height: 1.5;
+}
