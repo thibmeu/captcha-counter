@@ -5,7 +5,19 @@
   "description": "Counts the CAPTCHAs you encounter: Cloudflare Turnstile and Google reCAPTCHA.",
   "action": {
     "default_popup": "src/popup/index.html",
-    "default_title": "Captcha Counter"
+    "default_title": "Captcha Counter",
+    "default_icon": {
+      "16": "src/assets/icons/idle-16.png",
+      "32": "src/assets/icons/idle-32.png",
+      "48": "src/assets/icons/idle-48.png",
+      "128": "src/assets/icons/idle-128.png"
+    }
+  },
+  "icons": {
+    "16": "src/assets/icons/idle-16.png",
+    "32": "src/assets/icons/idle-32.png",
+    "48": "src/assets/icons/idle-48.png",
+    "128": "src/assets/icons/idle-128.png"
   },
   "background": {
     "scripts": ["src/background/index.ts"],
