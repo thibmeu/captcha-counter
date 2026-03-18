@@ -89,6 +89,7 @@ async function main(): Promise<void> {
     const empty = document.createElement("div");
     empty.className = "empty";
     empty.innerHTML =
+      `<span class="empty-icon">😶</span>` +
       `<div class="empty-title">No CAPTCHAs recorded yet</div>` +
       `<div class="empty-body">Browse normally and check back.</div>`;
     container.appendChild(empty);

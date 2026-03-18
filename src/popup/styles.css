@@ -1,22 +1,25 @@
 /*
- * Design tokens — OKLCH color space (perceptually uniform, unlike HSL).
- * Neutrals carry a subtle blue-gray tint (chroma 0.008–0.015) for cohesion.
- * All text/background pairs have been verified at ≥ 4.5:1 (WCAG AA).
+ * Design tokens — OKLCH color space (perceptually uniform).
+ * Warm amber-tinted neutrals (hue 70–85) to match the Fluent Emoji palette.
+ * All text/background pairs verified at ≥ 4.5:1 (WCAG AA).
  * Spacing follows a 4pt base: 4, 8, 12, 16, 20, 24, 32px.
  */
 
 :root {
   /* Text */
-  --text:         oklch(22%  0.020 250);   /* ~#1a2332 — dark blue-gray     */
-  --text-sub:     oklch(44%  0.012 250);   /* ~#5a6a7a — ≥ 4.5:1 on --bg   */
-  --text-success: oklch(42%  0.130 165);   /* teal-green                    */
-  --text-failure: oklch(44%  0.160  27);   /* red                           */
+  --text:         oklch(20%  0.020  55);   /* warm near-black              */
+  --text-sub:     oklch(44%  0.010  70);   /* warm gray, ≥ 4.5:1 on --bg  */
+  --text-success: oklch(44%  0.130 145);   /* warm green                   */
+  --text-failure: oklch(46%  0.155  25);   /* warm red                     */
 
   /* Surfaces */
-  --bg:           oklch(100% 0     0);
-  --header-bg:    oklch( 98% 0.006 250);   /* barely-tinted off-white       */
-  --divider:      oklch( 91% 0.007 250);   /* tinted separator              */
-  --bar-bg:       oklch( 93% 0.006 250);   /* tinted progress track         */
+  --bg:           oklch(99%  0.004  85);   /* warm white                   */
+  --header-bg:    oklch(97%  0.012  78);   /* warm cream                   */
+  --divider:      oklch(91%  0.010  78);   /* warm separator               */
+  --bar-bg:       oklch(93%  0.010  78);   /* warm progress track          */
+
+  /* Accent */
+  --accent:       oklch(72%  0.130  72);   /* amber — ties to emoji warmth */
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────────── */
@@ -32,13 +35,14 @@
 /* ── Base ────────────────────────────────────────────────────────────────── */
 
 body {
-  /* System font stack: instant load, native feel, avoids the Inter cliché */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
     sans-serif;
   width: 300px;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  /* Amber top stripe — the personality mark */
+  border-top: 3px solid var(--accent);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -47,17 +51,18 @@ header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 20px;
+  padding: 12px 16px;
   background: var(--header-bg);
   border-bottom: 1px solid var(--divider);
 }
 
 .header-icon {
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1;
   /* Optical adjustment — emoji glyphs read visually high */
   position: relative;
   top: 1px;
+  flex-shrink: 0;
 }
 
 header h1 {
@@ -70,7 +75,7 @@ header h1 {
 /* ── Provider sections ───────────────────────────────────────────────────── */
 
 section {
-  padding: 16px 20px;
+  padding: 16px 16px 14px;
 }
 
 section + section {
@@ -79,8 +84,8 @@ section + section {
 
 .provider-label {
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--text-sub);
   margin-bottom: 12px;
@@ -95,18 +100,19 @@ section + section {
 }
 
 .metric-value {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 700;
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   font-variant-numeric: tabular-nums;
   color: var(--text);
+  letter-spacing: -0.02em;
 }
 
 .metric-label {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-sub);
 }
@@ -124,7 +130,7 @@ section + section {
 
 .rate-track {
   flex: 1;
-  height: 3px;
+  height: 4px;
   background: var(--bar-bg);
   border-radius: 99px;
   overflow: hidden;
@@ -134,11 +140,12 @@ section + section {
   height: 100%;
   background: var(--text-success);
   border-radius: 99px;
+  transition: width 0.3s ease;
 }
 
 .rate-pct {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-sub);
   min-width: 28px;
   text-align: right;
@@ -149,7 +156,7 @@ section + section {
 
 footer {
   border-top: 1px solid var(--divider);
-  padding: 10px 20px;
+  padding: 10px 16px;
 }
 
 footer button {
@@ -161,22 +168,30 @@ footer button {
   color: var(--text-sub);
   cursor: pointer;
   letter-spacing: 0.01em;
+  transition: color 0.15s ease;
 }
 
 footer button:hover {
-  color: var(--text);
+  color: var(--accent);
 }
 
 /* ── Empty state ─────────────────────────────────────────────────────────── */
 
 .empty {
-  padding: 28px 20px;
+  padding: 28px 16px;
   text-align: center;
+}
+
+.empty-icon {
+  font-size: 32px;
+  line-height: 1;
+  margin-bottom: 10px;
+  display: block;
 }
 
 .empty-title {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text);
   margin-bottom: 4px;
 }
@@ -184,5 +199,5 @@ footer button:hover {
 .empty-body {
   font-size: 12px;
   color: var(--text-sub);
-  line-height: 1.5;
+  line-height: 1.6;
 }
