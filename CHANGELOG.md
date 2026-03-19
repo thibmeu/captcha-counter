@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-03-19
+
+### Fixed
+
+- Firefox: add `scripts` alongside `service_worker` for background compatibility with current stable Firefox
+- Firefox: use `service_worker` key for future Firefox versions
+- Popup range filter re-reads storage after reset, fixing stale data on range change post-reset
+- reCAPTCHA widget probe loop bounded to 100 iterations
+- Chrome manifest description updated to include hCaptcha
+
 ## [0.1.0] - 2026-03-19
 
 ### Added
@@ -19,4 +29,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All data stored locally in `chrome.storage.local` — no network requests
 - Chrome (MV3) and Firefox (MV3) support
 
+[0.1.1]: https://github.com/thibmeu/captcha-counter/releases/tag/v0.1.1
 [0.1.0]: https://github.com/thibmeu/captcha-counter/releases/tag/v0.1.0
