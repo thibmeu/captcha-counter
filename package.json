@@ -9,7 +9,9 @@
     "dev:chrome": "vite build --watch --mode chrome",
     "dev:firefox": "vite build --watch --mode firefox",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "package:chrome": "npm run build:chrome && cd dist/chrome && zip -r ../../captcha-counter-chrome.zip .",
+    "package:firefox": "npm run build:firefox && cd dist/firefox && zip -r ../../captcha-counter-firefox.zip ."
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^20.8.4",
