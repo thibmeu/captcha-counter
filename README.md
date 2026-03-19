@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-Count the CAPTCHAs you solve every day. **captcha-counter** is a browser extension that quietly observes Cloudflare Turnstile, Google reCAPTCHA, and hCaptcha — tracking solved and failed challenges per provider and per site.
+Count the CAPTCHAs you solve every day. **captcha-counter** is a browser extension that quietly observes Cloudflare Turnstile, Google reCAPTCHA, and hCaptcha, tracking solved and failed challenges per provider and per site.
 
 All data stays on your device.
 
@@ -15,7 +15,7 @@ All data stays on your device.
 * Extension icon reacts on each solve or failure
 * Export data as CSV
 * Reset data from the popup
-* No network requests — everything lives in `chrome.storage.local`
+* No network requests, everything lives in `chrome.storage.local`
 
 ## Installation
 
@@ -42,9 +42,9 @@ npm run typecheck      # TypeScript check without emit
 
 ## How it works
 
-**Iframe detection** — a content script observes the DOM for CAPTCHA iframe URLs. When a matching iframe appears, a `clicked` event is recorded on focus.
+**Iframe detection.** A content script observes the DOM for CAPTCHA iframe URLs. When a matching iframe appears, a `clicked` event is recorded on focus.
 
-**Token polling** — a separate script injected into the page's main world polls `window.turnstile.getResponse()`, `window.grecaptcha.getResponse()`, and `window.hcaptcha.getResponse()` every 300ms. A token appearing means a solve; a token clearing means a failure. This approach is non-invasive and does not interfere with CAPTCHA initialisation.
+**Token polling.** A separate script injected into the page's main world polls `window.turnstile.getResponse()`, `window.grecaptcha.getResponse()`, and `window.hcaptcha.getResponse()` every 300ms. A token appearing means a solve; a token clearing means a failure. This approach is non-invasive and does not interfere with CAPTCHA initialisation.
 
 Events are stored in `chrome.storage.local` as a flat array of `CaptchaEvent` objects.
 
