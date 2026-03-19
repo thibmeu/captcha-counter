@@ -1,25 +1,20 @@
 /*
- * Design tokens — OKLCH color space (perceptually uniform).
- * Warm amber-tinted neutrals (hue 70–85) to match the Fluent Emoji palette.
- * All text/background pairs verified at ≥ 4.5:1 (WCAG AA).
- * Spacing follows a 4pt base: 4, 8, 12, 16, 20, 24, 32px.
+ * Warm parchment palette — ink on paper.
+ * Amber is the identity color: echoes the Fluent Emoji golden tones.
+ * Two surfaces (bg / surface) give physical layering without noise.
  */
 
 :root {
-  /* Text */
-  --text:         oklch(20%  0.020  55);   /* warm near-black              */
-  --text-sub:     oklch(44%  0.010  70);   /* warm gray, ≥ 4.5:1 on --bg  */
-  --text-success: oklch(44%  0.130 145);   /* warm green                   */
-  --text-failure: oklch(46%  0.155  25);   /* warm red                     */
+  --text:         oklch(18%  0.025  65);   /* warm ink                     */
+  --text-sub:     oklch(50%  0.018  70);   /* warm mid-gray                */
+  --text-success: oklch(56%  0.17  142);   /* Catppuccin Latte green       */
+  --text-failure: oklch(54%  0.17   22);   /* Catppuccin Latte maroon      */
 
-  /* Surfaces */
-  --bg:           oklch(99%  0.004  85);   /* warm white                   */
-  --header-bg:    oklch(97%  0.012  78);   /* warm cream                   */
-  --divider:      oklch(91%  0.010  78);   /* warm separator               */
-  --bar-bg:       oklch(93%  0.010  78);   /* warm progress track          */
+  --bg:           oklch(97%  0.012  80);   /* parchment — warmer than Latte base */
+  --surface:      oklch(93%  0.020  76);   /* header / footer plate        */
+  --line:         oklch(87%  0.022  75);   /* warm separator               */
 
-  /* Accent */
-  --accent:       oklch(72%  0.130  72);   /* amber — ties to emoji warmth */
+  --accent:       oklch(68%  0.20   45);   /* Catppuccin Latte peach       */
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────────── */
@@ -41,8 +36,7 @@ body {
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
-  /* Amber top stripe — the personality mark */
-  border-top: 3px solid var(--accent);
+  border-top: 2px solid var(--accent);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -51,34 +45,14 @@ header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--divider);
-}
-
-#range {
-  margin-left: auto;
-  font-family: inherit;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-sub);
-  background: transparent;
-  border: 1px solid var(--divider);
-  border-radius: 4px;
-  padding: 2px 4px;
-  cursor: pointer;
-  outline: none;
-}
-
-#range:hover {
-  border-color: var(--accent);
-  color: var(--text);
+  padding: 11px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
 }
 
 .header-icon {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1;
-  /* Optical adjustment — emoji glyphs read visually high */
   position: relative;
   top: 1px;
   flex-shrink: 0;
@@ -86,97 +60,93 @@ header {
 
 header h1 {
   font-size: 13px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 500;
   color: var(--text);
 }
 
-/* ── Provider sections ───────────────────────────────────────────────────── */
-
-section {
-  padding: 16px 16px 14px;
-}
-
-section + section {
-  border-top: 1px solid var(--divider);
-}
-
-.provider-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+#range {
+  margin-left: auto;
+  font-family: inherit;
+  font-size: 11px;
   color: var(--text-sub);
-  margin-bottom: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
 }
 
-/* ── Metric grid ─────────────────────────────────────────────────────────── */
+#range:hover { color: var(--text); }
 
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  margin-bottom: 12px;
+/* ── Stats table ─────────────────────────────────────────────────────────── */
+
+.col-label {
+  width: 62px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-sub);
+  white-space: nowrap;
 }
 
-.metric-value {
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 3px;
+/* Unified row — same layout for providers and sites */
+.stat-row {
+  display: flex;
+  align-items: baseline;
+  padding: 7px 16px;
+}
+
+.stat-name {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+.stat-count {
+  width: 62px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
-.metric-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-sub);
-}
+.stat-count.success { color: var(--text-success); }
+.stat-count.failure { color: var(--text-failure); }
 
-.metric.success .metric-value { color: var(--text-success); }
-.metric.failure .metric-value { color: var(--text-failure); }
-
-/* ── Success-rate bar ────────────────────────────────────────────────────── */
-
-.rate-row {
+/* Section header row — label left, col labels right */
+.section-sep {
   display: flex;
   align-items: center;
-  gap: 8px;
+  padding: 10px 16px 6px;
+  border-top: 1px solid var(--line);
 }
 
-.rate-track {
+.section-sep:first-child {
+  border-top: none;
+}
+
+.sep-label {
   flex: 1;
-  height: 4px;
-  background: var(--bar-bg);
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.rate-fill {
-  height: 100%;
-  background: var(--text-success);
-  border-radius: 99px;
-  transition: width 0.3s ease;
-}
-
-.rate-pct {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   color: var(--text-sub);
-  min-width: 28px;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 
 footer {
-  border-top: 1px solid var(--divider);
-  padding: 10px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  padding: 9px 16px;
   display: flex;
+  align-items: center;
   gap: 12px;
 }
 
@@ -186,124 +156,30 @@ footer button {
   padding: 0;
   font-family: inherit;
   font-size: 11px;
+  font-weight: 400;
   color: var(--text-sub);
   cursor: pointer;
-  letter-spacing: 0.01em;
   transition: color 0.15s ease;
 }
 
-footer button:hover {
-  color: var(--accent);
-}
-
-/* ── Privacy note ────────────────────────────────────────────────────────── */
+footer button:hover { color: var(--accent); }
 
 .privacy-note {
+  margin-left: auto;
   font-size: 10px;
   color: var(--text-sub);
-  text-align: center;
-  padding-bottom: 8px;
-  margin: 0;
+  opacity: 0.6;
 }
-
-/* ── By-site accordion ───────────────────────────────────────────────────── */
-
-#by-site-accordion {
-  border-top: 1px solid var(--divider);
-}
-
-#by-site-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 9px 16px;
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text-sub);
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-#by-site-trigger:hover {
-  color: var(--accent);
-}
-
-.accordion-chevron {
-  font-size: 12px;
-  transition: transform 0.2s ease;
-  line-height: 1;
-}
-
-#by-site-accordion.open .accordion-chevron {
-  transform: rotate(180deg);
-}
-
-.accordion-body {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.2s ease;
-}
-
-#by-site-accordion.open .accordion-body {
-  grid-template-rows: 1fr;
-}
-
-.accordion-inner {
-  overflow: hidden; /* clips content while grid row is 0fr */
-}
-
-#sites-list {
-  list-style: none;
-  max-height: 180px;
-  overflow-y: auto;
-}
-
-.site-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 6px 16px;
-  font-size: 12px;
-}
-
-.site-row + .site-row {
-  border-top: 1px solid var(--divider);
-}
-
-.site-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-  margin-right: 8px;
-}
-
-.site-counts {
-  display: flex;
-  gap: 8px;
-  font-variant-numeric: tabular-nums;
-  font-size: 11px;
-  flex-shrink: 0;
-}
-
-.site-success { color: var(--text-success); }
-.site-failure { color: var(--text-failure); }
 
 /* ── Empty state ─────────────────────────────────────────────────────────── */
 
 .empty {
-  padding: 28px 16px;
+  padding: 32px 16px;
   text-align: center;
 }
 
 .empty-icon {
-  font-size: 32px;
+  font-size: 28px;
   line-height: 1;
   margin-bottom: 10px;
   display: block;
@@ -311,7 +187,7 @@ footer button:hover {
 
 .empty-title {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
   margin-bottom: 4px;
 }
@@ -319,5 +195,5 @@ footer button:hover {
 .empty-body {
   font-size: 12px;
   color: var(--text-sub);
-  line-height: 1.6;
+  line-height: 1.5;
 }

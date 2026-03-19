@@ -1,16 +1,10 @@
-import type { CaptchaEvent, CaptchaType, EventType } from "../types";
+import type { CaptchaEvent, CaptchaType } from "../types";
 import { computeStats, computeStatsBySite } from "./stats";
-import type { Counts } from "./stats";
 
 const PROVIDERS: { type: CaptchaType; label: string }[] = [
   { type: "turnstile", label: "Cloudflare Turnstile" },
   { type: "recaptcha", label: "Google reCAPTCHA" },
   { type: "hcaptcha",  label: "hCaptcha" },
-];
-
-const METRICS: { event: EventType; label: string; cls: string }[] = [
-  { event: "success", label: "Solved",  cls: "success" },
-  { event: "failure", label: "Failed",  cls: "failure" },
 ];
 
 type Range = "all" | "today" | "7d" | "30d";
@@ -30,91 +24,63 @@ function filterByRange(events: CaptchaEvent[], range: Range): CaptchaEvent[] {
   return events.filter((e) => e.timestamp >= cutoff);
 }
 
-function renderSection(label: string, counts: Counts): HTMLElement {
-  const total = counts.success + counts.failure;
-  const rate  = total > 0 ? Math.round((counts.success / total) * 100) : null;
+function renderSectionSep(label: string, withColHeaders = false): HTMLElement {
+  const sep = document.createElement("div");
+  sep.className = "section-sep";
 
-  const section = document.createElement("section");
+  const lbl = document.createElement("span");
+  lbl.className = "sep-label";
+  lbl.textContent = label;
+  sep.appendChild(lbl);
 
-  const providerLabel = document.createElement("div");
-  providerLabel.className = "provider-label";
-  providerLabel.textContent = label;
-  section.appendChild(providerLabel);
+  if (withColHeaders) {
+    const s = document.createElement("span");
+    s.className = "col-label";
+    s.textContent = "Solved";
 
-  const metrics = document.createElement("div");
-  metrics.className = "metrics";
-  for (const { event, label: metricLabel, cls } of METRICS) {
-    const col = document.createElement("div");
-    col.className = `metric${cls ? ` ${cls}` : ""}`;
+    const f = document.createElement("span");
+    f.className = "col-label";
+    f.textContent = "Failed";
 
-    const val = document.createElement("div");
-    val.className = "metric-value";
-    val.textContent = String(counts[event]);
-
-    const lbl = document.createElement("div");
-    lbl.className = "metric-label";
-    lbl.textContent = metricLabel;
-
-    col.appendChild(val);
-    col.appendChild(lbl);
-    metrics.appendChild(col);
-  }
-  section.appendChild(metrics);
-
-  if (rate !== null) {
-    const row = document.createElement("div");
-    row.className = "rate-row";
-
-    const track = document.createElement("div");
-    track.className = "rate-track";
-    const fill = document.createElement("div");
-    fill.className = "rate-fill";
-    fill.style.width = `${rate}%`;
-    track.appendChild(fill);
-
-    const pct = document.createElement("div");
-    pct.className = "rate-pct";
-    pct.textContent = `${rate}%`;
-
-    row.appendChild(track);
-    row.appendChild(pct);
-    section.appendChild(row);
+    sep.appendChild(s);
+    sep.appendChild(f);
   }
 
-  return section;
+  return sep;
 }
 
-function renderSitesAccordion(events: CaptchaEvent[]): void {
-  const bySite = computeStatsBySite(events);
-  const accordion = document.getElementById("by-site-accordion") as HTMLElement;
-  accordion.hidden = bySite.size === 0;
+function renderRow(name: string, success: number, failure: number): HTMLElement {
+  const row = document.createElement("div");
+  row.className = "stat-row";
 
-  const list = document.getElementById("sites-list")!;
-  list.innerHTML = "";
-  const entries = [...bySite.entries()]
-    .sort((a, b) => (b[1].success + b[1].failure) - (a[1].success + a[1].failure));
-  for (const [site, counts] of entries) {
-    const li = document.createElement("li");
-    li.className = "site-row";
-    const name = document.createElement("span");
-    name.className = "site-name";
-    name.textContent = site;
-    const countsEl = document.createElement("span");
-    countsEl.className = "site-counts";
-    countsEl.innerHTML =
-      `<span class="site-success">${counts.success}✓</span>` +
-      `<span class="site-failure">${counts.failure}✗</span>`;
-    li.appendChild(name);
-    li.appendChild(countsEl);
-    list.appendChild(li);
-  }
+  const nameEl = document.createElement("span");
+  nameEl.className = "stat-name";
+  nameEl.textContent = name;
+
+  const sEl = document.createElement("span");
+  sEl.className = "stat-count success";
+  sEl.textContent = String(success);
+
+  const fEl = document.createElement("span");
+  fEl.className = "stat-count failure";
+  fEl.textContent = String(failure);
+
+  row.appendChild(nameEl);
+  row.appendChild(sEl);
+  row.appendChild(fEl);
+  return row;
 }
 
 function renderStats(events: CaptchaEvent[]): void {
   const container = document.getElementById("stats")!;
   container.innerHTML = "";
 
-  if (events.length === 0) {
+  const stats = computeStats(events);
+  const activeProviders = PROVIDERS.filter(
+    ({ type }) => stats[type].success + stats[type].failure > 0,
+  );
+
+  if (activeProviders.length === 0) {
     const empty = document.createElement("div");
     empty.className = "empty";
     empty.innerHTML =
@@ -122,30 +88,26 @@ function renderStats(events: CaptchaEvent[]): void {
       `<div class="empty-title">No CAPTCHAs in this period</div>` +
       `<div class="empty-body">Browse normally and check back.</div>`;
     container.appendChild(empty);
-    renderSitesAccordion([]);
     return;
   }
 
-  const stats = computeStats(events);
-  let rendered = 0;
-  for (const { type, label } of PROVIDERS) {
-    const counts = stats[type];
-    if (counts.success + counts.failure === 0) continue;
-    container.appendChild(renderSection(label, counts));
-    rendered++;
+  container.appendChild(renderSectionSep("By provider", true));
+
+  for (const { type, label } of activeProviders) {
+    const c = stats[type];
+    container.appendChild(renderRow(label, c.success, c.failure));
   }
 
-  if (rendered === 0) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.innerHTML =
-      `<span class="empty-icon">😶</span>` +
-      `<div class="empty-title">No CAPTCHAs in this period</div>` +
-      `<div class="empty-body">Browse normally and check back.</div>`;
-    container.appendChild(empty);
+  const bySite = computeStatsBySite(events);
+  if (bySite.size > 0) {
+    container.appendChild(renderSectionSep("By site"));
+    const top5 = [...bySite.entries()]
+      .sort((a, b) => (b[1].success + b[1].failure) - (a[1].success + a[1].failure))
+      .slice(0, 5);
+    for (const [site, counts] of top5) {
+      container.appendChild(renderRow(site, counts.success, counts.failure));
+    }
   }
-
-  renderSitesAccordion(events);
 }
 
 async function main(): Promise<void> {
@@ -162,13 +124,6 @@ async function main(): Promise<void> {
     const range = rangeEl.value as Range;
     void chrome.storage.local.set({ popup_range: range });
     renderStats(filterByRange(allEvents, range));
-  });
-
-  const trigger = document.getElementById("by-site-trigger") as HTMLButtonElement;
-  trigger.addEventListener("click", () => {
-    const expanded = trigger.getAttribute("aria-expanded") === "true";
-    trigger.setAttribute("aria-expanded", String(!expanded));
-    trigger.closest("#by-site-accordion")!.classList.toggle("open", !expanded);
   });
 
   document.getElementById("reset")?.addEventListener("click", () => {
