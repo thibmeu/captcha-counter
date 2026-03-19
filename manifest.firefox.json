@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Captcha Counter",
-  "version": "0.1.0",
-  "description": "Counts the CAPTCHAs you encounter: Cloudflare Turnstile and Google reCAPTCHA.",
+  "version": "0.1.2",
+  "description": "Counts the CAPTCHAs you encounter: Cloudflare Turnstile, Google reCAPTCHA, and hCaptcha.",
   "action": {
     "default_popup": "src/popup/index.html",
     "default_title": "Captcha Counter",
@@ -42,14 +42,14 @@
   },
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
-  "data_collection_permissions": {
-    "required": [],
-    "optional": []
-  },
   "browser_specific_settings": {
     "gecko": {
       "id": "captcha-counter@extension",
-      "strict_min_version": "128.0"
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": [],
+        "optional": []
+      }
     }
   }
 }
