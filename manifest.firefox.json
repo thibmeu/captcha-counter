@@ -42,6 +42,10 @@
   },
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
+  "data_collection_permissions": {
+    "required": [],
+    "optional": []
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "captcha-counter@extension",
