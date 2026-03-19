@@ -56,7 +56,7 @@ setInterval(() => {
     | { getResponse(widgetId?: number): string | undefined }
     | undefined;
   if (!gc?.getResponse) return;
-  for (let id = 0; ; id++) {
+  for (let id = 0; id < 100; id++) {
     try {
       checkToken(`rc:${id}`, gc.getResponse(id) ?? "", "recaptcha");
     } catch {

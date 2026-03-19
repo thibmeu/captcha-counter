@@ -120,10 +120,15 @@ async function main(): Promise<void> {
 
   renderStats(filterByRange(allEvents, savedRange));
 
+  async function refresh(): Promise<void> {
+    const result = await chrome.storage.local.get("captcha_events");
+    const events = (result["captcha_events"] as CaptchaEvent[]) ?? [];
+    renderStats(filterByRange(events, rangeEl.value as Range));
+  }
+
   rangeEl.addEventListener("change", () => {
-    const range = rangeEl.value as Range;
-    void chrome.storage.local.set({ popup_range: range });
-    renderStats(filterByRange(allEvents, range));
+    void chrome.storage.local.set({ popup_range: rangeEl.value });
+    void refresh();
   });
 
   document.getElementById("reset")?.addEventListener("click", () => {
